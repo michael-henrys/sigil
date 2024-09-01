@@ -25,7 +25,7 @@ scene.add(pointLight);
 
 const loader = new GLTFLoader();
 let loadedModel;
-loader.load('/sigil.glb', function (gltf) {
+loader.load('/sigil/sigil.glb', function (gltf) {
     gltf.scene.scale.set(1, 1, 1); // Adjust scale if needed
     gltf.scene.traverse((child) => {
         if (child.isMesh) {
