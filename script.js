@@ -10,17 +10,26 @@ renderer.setSize(window.innerWidth, window.innerHeight);
 renderer.shadowMap.enabled = true; // Enable shadows
 document.body.appendChild(renderer.domElement);
 
-const ambientLight = new THREE.AmbientLight(0x404040, 2); // Bright ambient light
-scene.add(ambientLight);
+// Set the background color to white
+scene.background = new THREE.Color(0xffffff);
 
-const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
-directionalLight.position.set(1, 1, 1).normalize();
+
+// // Add blue fog to simulate a glow effect
+// scene.fog = new THREE.Fog(0x87CEEB, 1, 900); 
+
+const directionalLight = new THREE.DirectionalLight(0xffffff, 10);
+directionalLight.position.set(0, -2, 0.5).normalize();
 scene.add(directionalLight);
 
-// Point Light (Glowing Light Effect)
-const pointLight = new THREE.PointLight(0xffffff, 2, 100); // Bright light with a range
-pointLight.position.set(0, 0, 0); // Position in the center
-scene.add(pointLight);
+const directionalLight2 = new THREE.DirectionalLight(0xffffff, 10);
+directionalLight2.position.set(-2, 0, 0).normalize();
+scene.add(directionalLight2);
+
+const directionalLight3 = new THREE.DirectionalLight(0xffffff, 10);
+directionalLight3.position.set(2, 0, 2).normalize();
+scene.add(directionalLight3);
+
+
 
 
 const loader = new GLTFLoader();
@@ -29,7 +38,7 @@ loader.load('/sigil/sigil.glb', function (gltf) {
     gltf.scene.scale.set(1, 1, 1); // Adjust scale if needed
     gltf.scene.traverse((child) => {
         if (child.isMesh) {
-            child.material.color.set(0xffffff); // Ensure visible color
+            child.material.color.set(0x87CEEB); // Ensure visible color
             child.material.emissive.set(0x000000); // Add some emissive light
             child.castShadow = true;
             child.receiveShadow = true;
