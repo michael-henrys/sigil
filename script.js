@@ -61,9 +61,9 @@ loader.load('/sigil/sigil.glb', function (gltf) {
             if (child.material.isMeshStandardMaterial || child.material.isMeshPhysicalMaterial) {
                 // // Adjust PBR material properties
                 child.material.metalness = 1;    // Fully metallic
-                child.material.roughness = 0.9; 
+                child.material.roughness = 0.7; 
                 child.material.transparent = true;
-                child.material.opacity = 0.7;
+                child.material.opacity = 0.6;
                 // child.material.transmission = 0.85;
                 child.material.envMapIntensity = 3.0;
                 child.material.envMap = textureCube; // Set the environment map for reflection
