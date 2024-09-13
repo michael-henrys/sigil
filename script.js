@@ -10,42 +10,65 @@ renderer.setSize(window.innerWidth, window.innerHeight);
 renderer.shadowMap.enabled = true; // Enable shadows
 document.body.appendChild(renderer.domElement);
 
-// Set the background color to white
-scene.background = new THREE.Color(0xffffff);
+const textureLoader = new THREE.CubeTextureLoader();
+const textureCube = textureLoader.load([
+    '/sigil/cube-map/px.png', '/sigil/cube-map/nx.png',
+    '/sigil/cube-map/py.png', '/sigil/cube-map/ny.png',
+    '/sigil/cube-map/pz.png', '/sigil/cube-map/nz.png'
+], () => {
+    console.log('Cube texture loaded successfully');
+}, undefined, (error) => {
+    console.error('An error occurred while loading the texture', error);
+});
+
+// Set the environment map for the scene
+scene.background = textureCube;   // Use it as a background
+scene.environment = textureCube;  // Use it for lighting reflections
 
 
-// Add blue fog to simulate a glow effect
-scene.fog = new THREE.Fog(0x87CEEB, 1, 1700); 
+// // Add blue fog to simulate a glow effect
+// scene.fog = new THREE.Fog(0x87CEEB, 1, 1000); 
 
-const directionalLight = new THREE.DirectionalLight(0xffffff, 20);
-directionalLight.position.set(0, -2, 0.5).normalize();
+const directionalLight = new THREE.DirectionalLight(0xffffff, 100);
+directionalLight.position.set(0, -2, 1).normalize();
 scene.add(directionalLight);
 
-const directionalLight2 = new THREE.DirectionalLight(0xf700ff, 5);
-directionalLight2.position.set(-2, 0, 0).normalize();
+const directionalLight5 = new THREE.DirectionalLight(0xffffff, 10);
+directionalLight5.position.set(-0.5, 0., 0.25).normalize();
+scene.add(directionalLight5);
+
+const directionalLight2 = new THREE.DirectionalLight(0xf700ff, 20);
+directionalLight2.position.set(-4, 0, 0).normalize();
 scene.add(directionalLight2);
 
-const directionalLight3 = new THREE.DirectionalLight(0x00c9ff, 10);
-directionalLight3.position.set(-2, 0, 0).normalize();
+const directionalLight3 = new THREE.DirectionalLight(0x00c9ff, 20);
+directionalLight3.position.set(-4, 0, 0).normalize();
 scene.add(directionalLight3);
 
-const directionalLight4 = new THREE.DirectionalLight(0x00c9ff, 10);
+const directionalLight4 = new THREE.DirectionalLight(0x00c9ff, 20);
 directionalLight4.position.set(2, 1, 2).normalize();
 scene.add(directionalLight4);
-
-
 
 
 const loader = new GLTFLoader();
 let loadedModel;
 loader.load('/sigil/sigil.glb', function (gltf) {
     gltf.scene.scale.set(1, 1, 1); // Adjust scale if needed
+    // Traverse the model to find all meshes
     gltf.scene.traverse((child) => {
         if (child.isMesh) {
-            child.material.color.set(0xffffff); // Ensure visible color
-            child.material.emissive.set(0x00000); // Add some emissive light
-            child.castShadow = true;
-            child.receiveShadow = true;
+            // Ensure the mesh uses a PBR material
+            if (child.material.isMeshStandardMaterial || child.material.isMeshPhysicalMaterial) {
+                // // Adjust PBR material properties
+                child.material.metalness = 1;    // Fully metallic
+                child.material.roughness = 0.9; 
+                child.material.transparent = true;
+                child.material.opacity = 0.7;
+                // child.material.transmission = 0.85;
+                child.material.envMapIntensity = 3.0;
+                child.material.envMap = textureCube; // Set the environment map for reflection
+                child.material.needsUpdate = true;  // Ensure material update is triggered
+            }
         }
     });
     loadedModel = gltf.scene; // Store reference to the loaded model
@@ -54,7 +77,7 @@ loader.load('/sigil/sigil.glb', function (gltf) {
     console.error(error);
 });
 
-camera.position.set(0, 0, 450);
+camera.position.set(0, 0, 300);
 
 const controls = new OrbitControls(camera, renderer.domElement);
 controls.update();
