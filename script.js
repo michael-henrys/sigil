@@ -21,8 +21,8 @@ const textureCube = textureLoader.load([
     console.error('An error occurred while loading the texture', error);
 });
 
-// Set the environment map for the scene
-scene.background = textureCube;   // Use it as a background
+// // Set the environment map for the scene
+scene.background = textureCube;
 scene.environment = textureCube;  // Use it for lighting reflections
 
 
@@ -37,13 +37,13 @@ const directionalLight5 = new THREE.DirectionalLight(0xffffff, 10);
 directionalLight5.position.set(-0.5, 0., 0.25).normalize();
 scene.add(directionalLight5);
 
-const directionalLight2 = new THREE.DirectionalLight(0xf700ff, 20);
+const directionalLight2 = new THREE.DirectionalLight(0xf700ff, 10);
 directionalLight2.position.set(-4, 0, 0).normalize();
 scene.add(directionalLight2);
 
-const directionalLight3 = new THREE.DirectionalLight(0x00c9ff, 20);
-directionalLight3.position.set(-4, 0, 0).normalize();
-scene.add(directionalLight3);
+// const directionalLight3 = new THREE.DirectionalLight(0x00c9ff, 100);
+// directionalLight3.position.set(-4, 0, 0).normalize();
+// scene.add(directionalLight3);
 
 const directionalLight4 = new THREE.DirectionalLight(0x00c9ff, 20);
 directionalLight4.position.set(2, 1, 2).normalize();
@@ -60,8 +60,8 @@ loader.load('/sigil/sigil.glb', function (gltf) {
             // Ensure the mesh uses a PBR material
             if (child.material.isMeshStandardMaterial || child.material.isMeshPhysicalMaterial) {
                 // // Adjust PBR material properties
-                child.material.metalness = 1;    // Fully metallic
-                child.material.roughness = 0.7; 
+                child.material.metalness = 1.05;    // Fully metallic
+                child.material.roughness = 0.5; 
                 child.material.transparent = true;
                 child.material.opacity = 0.6;
                 // child.material.transmission = 0.85;
@@ -87,7 +87,7 @@ function animate() {
     
     if (loadedModel) {
         // Rotate the model
-        loadedModel.rotation.y += 0.01; // Rotate around Y-axis
+        loadedModel.rotation.y += 0.005; // Rotate around Y-axis
     }
     
     renderer.render(scene, camera);
